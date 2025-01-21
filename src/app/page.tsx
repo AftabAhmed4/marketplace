@@ -1,101 +1,106 @@
 import Image from "next/image";
+import Hero from "../../public/hero.png"
+import Hero2 from '../../public/mobile-hero.png'
+import Asd from "../../public/Frame 60.png"
+
+// compoments
+import NewArrival from "@/components/NewArrival";
+import TopSelling from "@/components/TopSelling"
+import Review from "@/components/Reviw"
+import Link from "next/link";
+
+
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  return ( 
+<div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+{/* // Start Hero Section */}
+<div className="relative bg-gray-100">
+  {/* Hero Image */}
+  <div className="w-full h-full overflow-hidden">
+    {/* Large Screen Image */}
+    <Image
+      src={Hero}
+      alt="hero"
+      className="hidden sm:block object-cover w-full h-[70vh] lg:h-[80vh]"
+    />
+    {/* Small Screen Image */}
+    <Image
+      src={Hero2}
+      alt="hero"
+      className="block sm:hidden object-cover w-full h-full"
+    />
+
+
+    {/* Text Section */}
+    <div className="absolute top-[10%] sm:top-[15%] left-5 sm:left-10 lg:left-[5%] text-gray-800">
+      <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black">
+        FIND CLOTHES
+      </h1>
+      <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black">
+        THAT MATCHES
+      </h1>
+      <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black">
+        YOUR STYLE
+      </h1>
+      <p className="mt-4 sm:mt-6 text-sm sm:text-base lg:text-lg sm:w-[50%]">
+        Browse through our diverse range of meticulously crafted garments, designed
+        to bring out your individuality and cater to your sense of style.
+      </p>
+      <Link href='/store'> <button className="mt-6 bg-black text-white rounded-full px-6 py-2 sm:px-8 sm:py-3 lg:w-60 lg:h-12">
+        SHOP NOW
+      </button></Link>
     </div>
+  </div>
+</div>
+{/* End Hero Section */}
+
+
+  
+{/* second  navbar start */}
+<div className="bg-black  lg:p-4 text-white  ">
+  <ul className="flex flex-wrap justify-center gap-4 sm:justify-between px-6 py-3 sm:py-2 p-4 sm:px-5 md:px-20 ">
+    <li className="xl:text-2xl lg:text-xl font-bold">VERSACE</li>
+    <li className =" xl:text-2xl lg:text-xl font-bold">ZARA</li>
+    <li className =" xl:text-2xl lg:text-xl font-bold">GUCCI</li>
+    <li className ="xl:text-2xl lg:text-xl font-bold">PARADA</li>
+    <li className ="xl:text-2xl lg:text-xl font-bold">Calvinklein</li>
+  </ul>
+
+</div>
+
+
+{/* NEW ARRIVAL */}
+<div id="new-arrival">
+<NewArrival/>
+</div>
+
+
+ {/* top selling start */}
+
+
+ <div id="sale">
+  <TopSelling/>
+ </div>
+
+
+ {/* img secton  start*/}
+ <div id="Brand">
+ <div className="flex justify-center mt-16 ">
+ <Image src={Asd} alt="Ashirt" className="rounded xl:w-[1400px] lg:w-[900px]"  /> 
+ </div>
+ </div>
+ {/* image section end */}
+
+ {/* reweiew section */}
+<Review/>
+ {/* rewiwew end */}
+
+
+
+</div >
+
   );
 }
