@@ -28,10 +28,6 @@ const CartPage = () => {
   const discount = 0.2; // 20% discount
   const deliveryFee = 15;
 
-  function updateQuantity(id: number, value: string): void {
-    throw new Error("Function not implemented.");
-  }
-
 
     const [quantity, setQuantity] = useState(1);
       // Handle quantity input change

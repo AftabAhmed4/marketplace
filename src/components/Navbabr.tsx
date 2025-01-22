@@ -10,7 +10,8 @@ import { FaAngleDown } from "react-icons/fa";
 import { useCart } from "@/components/CartContext";
 import Link from "next/link";
 import { client } from "@/sanity/lib/client";
-import { IoSearchSharp } from "react-icons/io5";
+import Image from "next/image";
+
 
 
 const Navbar = () => {
@@ -33,7 +34,7 @@ const Navbar = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const { cartItems } = useCart(); // Access cartItems from context
   const cartLength = cartItems.length; // Get the length of items in the cart
 
@@ -74,7 +75,7 @@ const Navbar = () => {
         const productApi = await client.fetch(query);
         setProducts(productApi);
         setFilteredProducts(productApi);
-        setLoading(false);
+        // setLoading(false);
       };
       productFetching();
     }, []);
@@ -227,41 +228,20 @@ const Navbar = () => {
   className="overflow-y-auto absolute top-28 right-24 h-full w-[510px] bg-slate-100  rounded-4xl shadow-lg transform transition-transform duration-300 z-50">
 
   <div className="p-4 relative h-full flex flex-col ">
-    {/* Header */}
-    {/* <div className="flex justify-between items-center">
-      <h1 className="text-xl font-semibold">Search</h1>
-      <button
-        onClick={() => setIsPanelOpen(false)}
-        className="text-gray-800 hover:text-gray-600 absolute right-4 text-3xl"
-      >
-        &times;
-      </button>
-    </div> */}
-    
-    {/* Search Bar
-    <div className="relative mt-8">
-      <input
-        type="text"
-        placeholder="Search for products..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className="border border-gray-300 rounded-lg p-2 w-full pl-10"
-      />
-      {/* Search Icon */}
-      {/* <IoSearchSharp className='absolute left-3 top-3 w-5 h-5 text-gray-500'/>
-    </div> */}
+
 
     {/* Search Results */}
     <div className="mt-4 flex-grow ">
       {filteredProducts.length > 0 ? (
         filteredProducts.map((product) => (
-          <Link href={`/productDeatil/${product._id}`}>
+          <Link href={`/productDeatil/${product._id}`} key={product._id}>
           <div
-            key={product._id}
             className="flex items-center space-x-4 border-b border-gray-200 py-2"
             onClick={() => setIsPanelOpen(false)}
           >
-            <img
+            <Image
+            width={100}
+            height={100}
               src={product.imageUrl}
               alt={product.name}
               className="w-16 h-16 object-cover rounded-md"

@@ -16,7 +16,7 @@ interface Product {
 
 const NewArrival: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  // const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const productFetch = async () => {
@@ -42,15 +42,15 @@ const NewArrival: React.FC = () => {
     }, []);
 
 
-  if (loading) {
-    <div className="flex justify-center items-center]">
-    <div className="text-xl font-bold text-gray-800 lg:text-2xl">
-<Link href="/" className="hover:text-gray-900">
-SHOP.CO
-</Link>
-</div>
-</div>
-  }
+//   if (loading) {
+//     <div className="flex justify-center items-center]">
+//     <div className="text-xl font-bold text-gray-800 lg:text-2xl">
+// <Link href="/" className="hover:text-gray-900">
+// SHOP.CO
+// </Link>
+// </div>
+// </div>
+//   }
 
   return (
     <div>
@@ -61,7 +61,7 @@ SHOP.CO
 
         {products.map((product) => (
           <Link href={`/productDeatil/${product._id}`}
-            key={product.id}
+            key={product._id}
             className=""
           >
             <Image

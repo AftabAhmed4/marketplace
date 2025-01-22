@@ -1,5 +1,5 @@
 // schemas/product.js
-export default {
+ const customerSheme={
     name: 'product',
     title: 'Product',
     type: 'document',
@@ -56,4 +56,4 @@ export default {
       },
     ],
   };
-  
+  export default customerSheme
