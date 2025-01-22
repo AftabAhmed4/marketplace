@@ -1,0 +1,17 @@
+Test id,Test Description,Test step,Expected Result,Actual Result,Status,Security level,Remarks
+T-1,Verify product sync from backend,1. Add a product in Sanity.,New product appears on the website.,Product sync successful,Passed,High,None
+T-2,Test cart functionality integration,2. Check if it appears on the frontend (product listing page).,,,,,
+,,1. Add a product to the cart.,Cart functionality is integrated correctly.,Cart works as expected,Passed,Medium,Test with multiple users.
+T-3,Validate search integration,1. Enter a search term.,Search results match the query.,Search functional,Passed,,
+,,2. Check if the search results are fetched from the backend correctly.,,,,Medium,Test with popular and edge cases.
+T-4,Test category-based filters,1. Apply filters on the product listing page.,Filters work correctly with backend data.,Filters functional,Fail,Medium,Test for multiple filter types.
+,,2. Verify results reflect backend data.,,,,,
+,,,,,,,
+T-5,Check order history functionality,"1. Place an order.
+2. Navigate to the order history page.
+3. Verify data is fetched correctly.",Order history displays accurate information.,Order history functional,Passed,High,Test with multiple orders.
+T-6,Test cart functionality integration,1. Add a product to the cart.,1. Add a product to the cart.,Cart works as expected,Passed,Medium,Test with multiple users.
+,,2. Verify if the cart persists across pages and sessions.,2. Verify if the cart persists across pages and sessions.,,,,
+T-7,"Check ""Add to Cart"" functionality",1. Select a product,Product is added to the cart,Product added to cart successfully,Passed,Medium,Test for different product types
+,,"2. Click ""Add to Cart""",,,,,
+,,3. View cart,,,,,
