@@ -207,8 +207,26 @@ const Navbar = () => {
           <Link href="/#Brand" className="block py-4  hover:bg-gray-200">
             Brand
           </Link>
+          
         </li>
+        <li>
+        <div onClick={()=>setIsPanelOpen(true)} className=" lg:block relative w-[100vw] mt-10">
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                <FaSearch />
+              </div>
+              <input
+                        type="text"
+                        placeholder="Search for products..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                className="border rounded-full bg-[#F0F0F0] px-12 py-2 w-full focus:outline-none focus:ring focus:ring-gray-300"
+              />
+            </div>
+
+        </li>
+        
       </ul>
+
     </div>
   </>
 )}
@@ -221,14 +239,32 @@ const Navbar = () => {
   className={`fixed inset-0 bg-black bg-opacity-50 z-50 top-0 ${
     isPanelOpen ? "block" : "hidden"
   }`}
-  onClick={() => setIsPanelOpen(false)}
+  // onClick={() => setIsPanelOpen(false)}
 >
 
 <div
-  className="overflow-y-auto absolute top-28 right-24 h-full w-[510px] bg-slate-100  rounded-4xl shadow-lg transform transition-transform duration-300 z-50">
+  className="overflow-y-auto absolute top-0 right-0 h-full w-[310px] md:w-[510px] bg-slate-100  rounded-4xl shadow-lg transform transition-transform duration-300 z-50">
+
+<div className="flex justify-between items-center px-6 pt-11">
+<div className="text-xl font-bold">Search</div>
+<div className="text-xl pointer font-bold" onClick={()=>setIsPanelOpen(false)}>&times;</div>
+</div>
 
   <div className="p-4 relative h-full flex flex-col ">
 
+
+  <div className=" lg:block relative w-[100vw] mt-4">
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                <FaSearch />
+              </div>
+              <input
+                        type="text"
+                        placeholder="Search for products..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                className="border rounded-full bg-[#F0F0F0] px-12 py-2 w-[300px] md:w-[420px] focus:outline-none focus:ring focus:ring-gray-300"
+              />
+            </div>
 
     {/* Search Results */}
     <div className="mt-4 flex-grow ">

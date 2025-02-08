@@ -6,6 +6,12 @@ import { FaTrashCan, FaMinus, FaPlus } from "react-icons/fa6";
 import Image from "next/image";
 import Link from "next/link";
 
+
+const removeFromCart = (id: string | number) => {
+  console.log("Removing item with ID:", id);
+  // Your logic to remove item from cart
+};
+
 const CartPage = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,9 +23,11 @@ const CartPage = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  
 
 
   const { cartItems, removeFromCart } = useCart();
+  console.log(cartItems)
   
 
   const calculateTotal = () =>
@@ -78,11 +86,11 @@ const CartPage = () => {
           <div className="flex flex-col gap-2 sm:gap-8 sm:items-end justify-center items-center">
             {/* Remove Button */}
             <button
-              className="text-red-500 hover:text-red-700"
-              onClick={() => removeFromCart(item._id)}
-            >
-              <FaTrashCan />
-            </button>
+  className="text-red-500 hover:text-red-700"
+  onClick={() => item?._id && removeFromCart(item._id)}
+>
+  <FaTrashCan />
+</button>;
         
             {/* Quantity Controls */}
             <div className="bg-gray-100 flex px-2 sm:px-4 items-center border border-gray-300 rounded-full w-[30%] sm:w-[40%] h-10">
@@ -145,9 +153,11 @@ const CartPage = () => {
             ).toFixed(2)}
           </span>
         </div>
-        <button className="w-full bg-black text-white px-6 py-3 rounded-md text-lg font-bold hover:bg-gray-800" onClick={handleCheckout}>
+        <Link href='/checkout'>
+        <button className="w-full bg-black text-white px-6 py-3 rounded-md text-lg font-bold hover:bg-gray-800">
           Go to Checkout
         </button>
+        </Link>
       </div>
     </div>
   )}

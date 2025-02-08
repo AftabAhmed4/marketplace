@@ -1,97 +1,103 @@
-'use client'
+'use client';
 
-import Link from 'next/link';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const LoginForm = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
+  interface LoginFormData {
+    email: string;
+    password: string;
+  }
 
-  const handleFormSubmit = (event:any) => {
-    event.preventDefault();
+  const [formData, setFormData] = useState<LoginFormData>({
+    email: '',
+    password: '',
+  });
 
-    // Get form values
-    const email = event.target.email.value;
-    const password = event.target.password.value;
+  const [error, setError] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const router = useRouter();
 
-    // Simple validation
-    if (!email || !password) {
-      setModalMessage('Both fields are required!');
-      setModalVisible(true);
-      return;
-    }
-
-    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    if (!emailPattern.test(email)) {
-      setModalMessage('Please enter a valid email address.');
-      setModalVisible(true);
-      return;
-    }
-
-    // If form is valid, show success message
-    setModalMessage('Login successful!');
-    setModalVisible(true);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
-  const closeModal = () => {
-    setModalVisible(false);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsSubmitting(true);
+
+    if (!formData.email || !formData.password) {
+      setError('Email and Password are required.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Login failed');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Redirect on successful login
+      router.push('/');
+    } catch (error) {
+      setError('An unexpected error occurred. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="font-[sans-serif] bg-white max-w-4xl flex items-center mx-auto md:h-screen p-4">
-      <div className="grid md:grid-cols-3 items-center shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-xl overflow-hidden">
-        <div className="max-md:order-1 flex flex-col justify-center space-y-16 max-md:mt-16 min-h-full bg-gradient-to-r from-gray-900 to-gray-700 lg:px-8 px-4 py-4">
-          <div>
-            <h4 className="text-white text-lg font-semibold">Welcome Back!</h4>
-            <p className="text-[13px] text-gray-300 mt-3 leading-relaxed">Please log in to your account to continue.</p>
-          </div>
-          <div>
-            <h4 className="text-white text-lg font-semibold">Simple & Secure Login</h4>
-            <p className="text-[13px] text-gray-300 mt-3 leading-relaxed">Your account is secured with encryption for your privacy.</p>
-          </div>
+    <div className="max-w-md mx-auto p-8 bg-white shadow-lg rounded-lg mt-24">
+      <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
         </div>
 
-        <form className="md:col-span-2 w-full py-6 px-6 sm:px-16" onSubmit={handleFormSubmit}>
-          <div className="mb-6">
-            <h3 className="text-gray-800 text-2xl font-bold">Log in to your account</h3>
-          </div>
-
-          <div className="space-y-6">
-            <div>
-              <label className="text-gray-800 text-sm mb-2 block">Email Id</label>
-              <div className="relative flex items-center">
-                <input name="email" type="email" className="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500" placeholder="Enter email" />
-              </div>
-            </div>
-
-            <div>
-              <label className="text-gray-800 text-sm mb-2 block">Password</label>
-              <div className="relative flex items-center">
-                <input name="password" type="password" className="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500" placeholder="Enter password" />
-              </div>
-            </div>
-          </div>
-
-          <div className="!mt-12">
-            <button type="submit" className="w-full py-3 px-4 tracking-wider text-sm rounded-md text-white bg-gray-700 hover:bg-gray-800 focus:outline-none">
-              Log in
-            </button>
-          </div>
-          <p className="text-gray-800 text-sm mt-6 text-center">Don't have an account? <Link href='/sign-up' className="text-blue-600 font-semibold hover:underline ml-1">Sign up here</Link></p>
-        </form>
-      </div>
-
-      {/* Modal */}
-      {modalVisible && (
-        <div className="fixed inset-0 bg-gray-700 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-            <p className="text-gray-800 text-lg">{modalMessage}</p>
-            <div className="flex justify-end mt-4">
-              <Link href='/'> <button onClick={closeModal} className="text-blue-600 font-semibold">Close</button></Link>
-            </div>
-          </div>
+        <div className="mb-4">
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
         </div>
-      )}
+
+        {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full p-3 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          {isSubmitting ? 'Logging In...' : 'Log In'}
+        </button>
+      </form>
     </div>
   );
 };

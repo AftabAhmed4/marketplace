@@ -1,114 +1,165 @@
-'use client'
+'use client';
 
+import { client } from '@/sanity/lib/client';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { v4 as uuidv4 } from 'uuid';
+import bcrypt from 'bcryptjs';
 
-const RegistrationForm = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
 
-  const handleFormSubmit = (event:any) => {
-    event.preventDefault();
-    
-    // Get form values
-    const name = event.target.name.value;
-    const email = event.target.email.value;
-    const password = event.target.password.value;
 
-    // Simple validation
-    if (!name || !email || !password) {
-      setModalMessage('All fields are required!');
-      setModalVisible(true);
-      return;
-    }
 
-    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    if (!emailPattern.test(email)) {
-      setModalMessage('Please enter a valid email address.');
-      setModalVisible(true);
-      return;
-    }
+// Define TypeScript interface
+interface SignUpFormData {
+  email: string;
+  username: string;
+  name: string;
+  password: string;
+}
 
-    // If form is valid, show success message
-    setModalMessage('Account created successfully!');
-    setModalVisible(true);
+
+
+
+
+const SignUpForm = () => {
+  const [formData, setFormData] = useState<SignUpFormData>({
+    email: '',
+    username: '',
+    name: '',
+    password: '',
+  });
+
+  const [error, setError] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  
+  const router = useRouter(); // Correctly use useRouter
+
+  // Handle input changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
-  const closeModal = () => {
-    setModalVisible(false);
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsSubmitting(true);
+  
+    try {
+      // Check if the user already exists by querying Sanity
+      const existingUsers = await client.fetch(
+        `*[_type == "user" && (email == $email || username == $username)]`,
+        { email: formData.email, username: formData.username }
+      );
+  
+      if (existingUsers.length > 0) {
+        setError('Email or Username is already taken. Please try another.');
+        setIsSubmitting(false);
+        return;
+      }
+  
+
+      const userId = uuidv4(); // Generate a unique ID
+      // Proceed with account creation if no duplicate found
+      const hashedPassword = await bcrypt.hash(formData.password, 10);
+      await client.create({
+        _type: 'user',
+        _id: userId, // Save the unique ID
+        email: formData.email,
+        username: formData.username,
+        name: formData.name,
+        password: hashedPassword, // Always hash passwords on backend
+      });
+  
+      setSuccessMessage('Account created successfully! Redirecting...');
+      setTimeout(() => {
+        router.push('/log-in');
+      }, 2000);
+  
+    } catch (err) {
+      setError('Failed to create account. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+  
 
   return (
-    <div className="font-[sans-serif] bg-white max-w-4xl flex items-center mx-auto md:h-screen p-4">
-      <div className="grid md:grid-cols-3 items-center shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-xl overflow-hidden">
-        <div className="max-md:order-1 flex flex-col justify-center space-y-16 max-md:mt-16 min-h-full bg-gradient-to-r from-gray-900 to-gray-700 lg:px-8 px-4 py-4">
-          <div>
-            <h4 className="text-white text-lg font-semibold">Create Your Account</h4>
-            <p className="text-[13px] text-gray-300 mt-3 leading-relaxed">Welcome to our registration page! Get started by creating your account.</p>
-          </div>
-          <div>
-            <h4 className="text-white text-lg font-semibold">Simple & Secure Registration</h4>
-            <p className="text-[13px] text-gray-300 mt-3 leading-relaxed">Our registration process is designed to be straightforward and secure. We prioritize your privacy and data security.</p>
-          </div>
+    <div className="max-w-md mx-auto p-8 bg-white shadow-lg rounded-lg mt-24">
+      <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Create an Account</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
         </div>
 
-        <form className="md:col-span-2 w-full py-6 px-6 sm:px-16" onSubmit={handleFormSubmit}>
-          <div className="mb-6">
-            <h3 className="text-gray-800 text-2xl font-bold">Create an account</h3>
-          </div>
-
-          <div className="space-y-6">
-            <div>
-              <label className="text-gray-800 text-sm mb-2 block">Name</label>
-              <div className="relative flex items-center">
-                <input name="name" type="text" className="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500" placeholder="Enter name" />
-              </div>
-            </div>
-
-            <div>
-              <label className="text-gray-800 text-sm mb-2 block">Email Id</label>
-              <div className="relative flex items-center">
-                <input name="email" type="email" className="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500" placeholder="Enter email" />
-              </div>
-            </div>
-
-            <div>
-              <label className="text-gray-800 text-sm mb-2 block">Password</label>
-              <div className="relative flex items-center">
-                <input name="password" type="password" className="text-gray-800 bg-white border border-gray-300 w-full text-sm px-4 py-2.5 rounded-md outline-blue-500" placeholder="Enter password" />
-              </div>
-            </div>
-
-            <div className="flex items-center">
-              <input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
-              <label htmlFor="remember-me" className="ml-3 block text-sm text-gray-800">
-                I accept the <a href="javascript:void(0);" className="text-blue-600 font-semibold hover:underline ml-1">Terms and Conditions</a>
-              </label>
-            </div>
-          </div>
-
-          <div className="!mt-12">
-            <button type="submit" className="w-full py-3 px-4 tracking-wider text-sm rounded-md text-white bg-gray-700 hover:bg-gray-800 focus:outline-none">
-              Create an account
-            </button>
-          </div>
-          <p className="text-gray-800 text-sm mt-6 text-center">Already have an account? <Link href='/log-in' className="text-blue-600 font-semibold hover:underline ml-1">Login here</Link></p>
-        </form>
-      </div>
-
-      {/* Modal */}
-      {modalVisible && (
-        <div className="fixed inset-0 bg-gray-700 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-            <p className="text-gray-800 text-lg">{modalMessage}</p>
-            <div className="flex justify-end mt-4">
-              <Link href='/'> <button onClick={closeModal} className="text-blue-600 font-semibold">Close</button></Link>
-            </div>
-          </div>
+        <div className="mb-4">
+          <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
         </div>
-      )}
+
+        <div className="mb-4">
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700">Full Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+
+        {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
+        {successMessage && <p className="text-green-500 text-sm text-center mb-4">{successMessage}</p>}
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full p-3 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          {isSubmitting ? 'Signing Up...' : 'Sign Up'}
+        </button>
+
+        <div className="mt-4 text-center">
+          Already have an account? <Link href='/log-in' className="text-blue-500 hover:underline">Login</Link>
+        </div>
+      </form>
     </div>
   );
 };
 
-export default RegistrationForm;
+export default SignUpForm;
