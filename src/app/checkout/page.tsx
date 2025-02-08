@@ -286,7 +286,7 @@ const Page = () => {
           {/* Show Stripe Payment Element Only for Bank Transfer */}
           {paymentMethod === "bankTransfer" && (
             <Elements stripe={stripePromise} options={{ mode: "payment", amount: convertToSubcurrency(totalAmount), currency: "usd" }}>
-              <CheckoutPage amount={totalAmount} form={form} isFilled={isFormFilled}  />
+              <CheckoutPage totalAmount={totalAmount} form={form} isFilled={isFormFilled} paymentMode={paymentMode} />
               {/* <button
                 className="text-white w-full p-5 bg-black mt-2 rounded-md font-bold disabled:opacity-50 disabled:animate-pulse"
                 onClick={handlePlaceOrder}

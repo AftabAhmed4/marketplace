@@ -6,6 +6,7 @@
 //   useElements,
 //   PaymentElement,
 // } from "@stripe/react-stripe-js";
+// import Link from "next/link";
 
 
 
@@ -79,7 +80,7 @@
 //       elements,
 //       clientSecret,
 //       confirmParams: {
-//         return_url: `https://marketplace-murex-six.vercel.app/success?amount=${amount}`,
+//         return_url: `http://www.localhost:3000/success?amount=${amount}`,
 //       },
 //     });
 
@@ -183,20 +184,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -214,12 +201,12 @@ import { client } from "@/sanity/lib/client";
 
 
 const CheckoutPage = ({
-  totalAmount,
+  amount,
     form,
     isFilled,
-    paymentMode
+    // paymentMode
   }: { 
-    totalAmount: number;
+    amount: number;
     form: { 
       fullName: string;
       city: string;
@@ -228,7 +215,7 @@ const CheckoutPage = ({
       email: string;
     };
     isFilled: boolean;
-    paymentMode:string
+    // paymentMode:string
   }) => {
 
     
@@ -246,8 +233,8 @@ const CheckoutPage = ({
 
 
 
-  function convertToSubcurrency(totalAmount: number, factor = 100) {
-    return Math.round(totalAmount * factor);
+  function convertToSubcurrency(amount: number, factor = 100) {
+    return Math.round(amount * factor);
   }
 
 
@@ -258,11 +245,11 @@ const CheckoutPage = ({
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ totalAmount: convertToSubcurrency(totalAmount) }),
+      body: JSON.stringify({ amount: convertToSubcurrency(amount) }),
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
-  }, [totalAmount]);
+  }, [amount]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -284,7 +271,7 @@ const CheckoutPage = ({
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `https://marketplace-murex-six.vercel.app/success?amount=${totalAmount}`,
+        return_url: `http://www.localhost:3000/success?amount=${amount}`,
       },
     });
 
@@ -375,8 +362,8 @@ const CheckoutPage = ({
         address: form.address,
         phone: form.phone,
         email: form.email,
-        totalAmount,
-        paymentMode: paymentMode,
+        amount,
+        // paymentMode: paymentMode,
         status: "pending",
         createdAt: new Date().toISOString(),
       };
@@ -410,9 +397,9 @@ const CheckoutPage = ({
       <button
         disabled={!stripe || loading}
         className="text-white w-full p-5 bg-black mt-2 rounded-md font-bold disabled:opacity-50 disabled:animate-pulse" 
-        onClick={handlePlaceOrder}
+        // onClick={handlePlaceOrder}
        >
-        {!loading ? `Pay $${totalAmount}` : "Processing..."}
+        {!loading ? `Pay $${amount}` : "Processing..."}
       </button>
     </form>
 

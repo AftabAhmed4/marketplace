@@ -90,7 +90,7 @@ const CartPage = () => {
   onClick={() => item?._id && removeFromCart(item._id)}
 >
   <FaTrashCan />
-</button>;
+</button>
         
             {/* Quantity Controls */}
             <div className="bg-gray-100 flex px-2 sm:px-4 items-center border border-gray-300 rounded-full w-[30%] sm:w-[40%] h-10">

@@ -247,7 +247,7 @@ const Navbar = () => {
 
 <div className="flex justify-between items-center px-6 pt-11">
 <div className="text-xl font-bold">Search</div>
-<div className="text-xl pointer font-bold" onClick={()=>setIsPanelOpen(false)}>&times;</div>
+<div className="text-xl cursor-pointer font-bold" onClick={()=>setIsPanelOpen(false)}>&times;</div>
 </div>
 
   <div className="p-4 relative h-full flex flex-col ">
